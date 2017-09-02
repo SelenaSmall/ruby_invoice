@@ -71,12 +71,17 @@ class OrderLine
       sub_total << k * i
     end
 
-    total = sub_total.inject(0) { |sum, x| sum + x }
+    @line_total = sub_total.inject(0) { |sum, x| sum + x }
 
-    puts "#{@order_qty} #{@order_item.name} #{total}"
+    puts "#{@order_qty} #{@order_item.name} #{@line_total}"
 
     sub_item.each do |s|
       puts s
     end
+  end
+
+  def total_quantity_of_items
+    # @order_qty * @line_total
+    @line_total
   end
 end

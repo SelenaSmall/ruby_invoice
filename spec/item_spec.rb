@@ -19,4 +19,12 @@ describe Item do
       expect(instance.packs('watermelon')).to be_a Array
     end
   end
+
+  describe '#packs' do
+    it 'should nil unless fruit is valid' do
+      instance = Item.new('Watermelons')
+
+      expect(instance.packs('hello')).to be_nil
+    end
+  end
 end

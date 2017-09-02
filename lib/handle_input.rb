@@ -1,10 +1,17 @@
 require_relative 'item'
+# require_relative 'order'
 require_relative 'order_line'
 
 # HandleInput class
 class HandleInput
+  attr_reader :order
+
   # Actions
   ACTIONS = %w[LIST SHOP VIEW EXIT].freeze
+
+  def initialize(order)
+    @order = order
+  end
 
   # Interpret method
   # @param command [String]
@@ -18,7 +25,26 @@ class HandleInput
       # list all availble items and package sizes
     end
 
-    return shop if command == 'SHOP'
+    # return shop if command == 'SHOP'
+    if command == 'SHOP'
+      $stdout.print "Select qty and items, example: 3 watermelon \n"
+
+      loop do
+        input = $stdin.gets.chomp
+
+        next if input.empty?
+
+        unless 'BACK'.match?(input)
+          shop(input)
+          next
+        end
+
+        $stdout.print "Returning to main menu \n"
+        break
+      end
+    end
+
+    # loop { shop if command == 'SHOP' }
 
     if command == 'VIEW'
       # show invoice
@@ -29,13 +55,8 @@ class HandleInput
     end
   end
 
-  def shop
-    # retrieve another input
-    $stdout.print "Select qty and items, example: 3 watermelon \n"
-
-    input = $stdin.gets.chomp
-
-    return if input.empty? # TODO: OR if it doesn't match a specific order pattern
+  def shop(input)
+    # TODO: OR if it doesn't match a specific order pattern
 
     # break it down into qty, item
     line = input.split(/\W+/)
@@ -50,6 +71,14 @@ class HandleInput
 
     # Present order_line for invoice
     order_line.present_line(product)
+
+    # order = Order.new
+
+    add_to_order = @order.add_item(order_line)
+
+    # puts add_to_order
+
+    puts order.find_order_total
 
     order_line
   end
