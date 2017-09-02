@@ -13,10 +13,18 @@ describe OrderLine do
   end
 
   describe '#optimal' do
-    it 'should return whole_packs' do
-      instance = OrderLine.new(3, Item.new('watermelon'))
+    it 'should return whole_packs which is an Array' do
+      instance = OrderLine.new(12, Item.new('watermelon'))
 
-      expect(instance.optimal(instance.order_item.name)).to be_a Hash
+      expect(instance.optimal(instance.order_item.name)).to be_a Array
+    end
+  end
+
+  describe '#present_line' do
+    it 'should return whole_packs which is an Array' do
+      instance = OrderLine.new(12, Item.new('watermelon'))
+
+      expect(instance.present_line(instance.optimal(instance.order_item.name))).to be_a Array
     end
   end
 end

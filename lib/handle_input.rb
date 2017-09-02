@@ -10,7 +10,7 @@ class HandleInput
   # @param command [String]
   # @return
   def interpret(command)
-    return unless ACTIONS.include?(command)
+    return unless ACTIONS.detect { |a| a == command }
 
     $stdout.print "#{command} \n"
 
@@ -43,19 +43,14 @@ class HandleInput
     # TODO: Ensure the order_item is valid
 
     # Create a order_line containing the new item
-    # puts line[1]
     order_line = OrderLine.new(line[0].to_i, Item.new(line[1]))
 
-    # line_item = OrderLine.new(6, Item.new('watermelon'))
-    order_line.optimal(order_line.order_item.name)
+    # Find optimal qty of packs
+    product = order_line.optimal(order_line.order_item.name)
 
-    # create the order_line
-    # order_line = OrderLine.new(line[0], line[1])
+    # Present order_line for invoice
+    order_line.present_line(product)
 
-    # return the order line
-    $stdout.print "#{order_line.order_qty} #{order_line.order_item.name} \n"
-    # puts order_line.optimal(order_line.order_item.name)
-    # puts order_line
     order_line
   end
 end

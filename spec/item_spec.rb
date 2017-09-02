@@ -12,11 +12,11 @@ describe Item do
     end
   end
 
-  describe '#watermelon' do
+  describe '#packs' do
     it 'should return an Array of Packs' do
       instance = Item.new('Watermelons')
 
-      expect(instance.watermelon).to be_a Array
+      expect(instance.packs('watermelon')).to be_a Array
     end
   end
 end

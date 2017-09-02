@@ -11,10 +11,12 @@ class Item
     @pack = nil
   end
 
-  def watermelon
-    threepack = Pack.new(3, Money.new(699, 'NZD'))
-    fivepack = Pack.new(5, Money.new(899, 'NZD'))
+  def packs(fruit)
+    if fruit == 'watermelon'
+      threepack = Pack.new(3, Money.new(699, 'NZD'))
+      fivepack = Pack.new(5, Money.new(899, 'NZD'))
 
-    [threepack, fivepack]
+      [threepack, fivepack]
+    end
   end
 end
