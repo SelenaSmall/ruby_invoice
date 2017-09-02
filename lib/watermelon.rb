@@ -11,11 +11,14 @@ class Watermelon < Item
     @pack = nil
   end
 
-  def pack_size(selection)
-    return unless OPTIONS.include?(selection)
+  # Pack size method
+  # @Param qty [Int]
+  # @Return @pack
+  def pack_size(qty)
+    return unless OPTIONS.include?(qty)
 
-    return @pack = Pack.new(3, Money.new(699, 'NZD')) if selection == 3
-    @pack = Pack.new(5, Money.new(899, 'NZD')) if selection == 5
+    return @pack = Pack.new(3, Money.new(699, 'NZD')) if qty == 3
+    @pack = Pack.new(5, Money.new(899, 'NZD')) if qty == 5
   end
 end
 
