@@ -15,7 +15,7 @@ describe Order do
   describe '#add_item' do
     it 'should return an Array of items' do
       instance = Order.new
-      order_line = OrderLine.new(10, Item.new('watermelon'))
+      order_line = OrderLine.new(10, Item.new('watermelons'))
       breakdown = order_line.present_line(order_line.optimal(order_line.order_item.name))
 
       expect(instance.add_item(order_line, breakdown)).to be_a Array

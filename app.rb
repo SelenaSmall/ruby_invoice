@@ -7,7 +7,7 @@ command = HandleInput.new(Order.new)
 
 # Read user input
 loop do
-  $stdout.print "Would you like to LIST available products, SHOP, VIEW basket, EXIT without placing an order? \n"
+  $stdout.print "Main menu: LIST available products, SHOP, VIEW basket, EXIT without placing an order? \n"
 
   input = gets.chomp
 

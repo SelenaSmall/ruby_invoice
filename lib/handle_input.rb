@@ -20,34 +20,34 @@ class HandleInput
   def interpret(command)
     return unless ACTIONS.detect { |a| a == command }
 
-    if command == 'LIST'
+    if command.match?('LIST')
       # list all availble items and package sizes
     end
 
-    # return shop if command == 'SHOP'
-    if command == 'SHOP'
-      $stdout.print "Select qty and items, example: 3 watermelon \n"
+    return shop_menu if command.match?('SHOP')
 
-      loop do
-        input = $stdin.gets.chomp
-
-        next if input.empty?
-
-        unless 'BACK'.match?(input)
-          shop(input)
-          next
-        end
-
-        $stdout.print "Returning to main menu \n"
-        break
-      end
-    end
-
-    # View Invoice
-    return invoice.print_order(order) if command == 'VIEW'
+    return invoice.print_order(order) if command.match?('VIEW')
   end
 
-  PATTERN = /^\s*\d+\s*(watermelon||pineapple||rockmelon)$/
+  private
+
+  def shop_menu
+    $stdout.print "Type BACK at any time to return to the main menu. \nAdd qty and items to backet, example input: 3 watermelons \n"
+
+    loop do
+      input = $stdin.gets.chomp
+
+      next if input.empty?
+
+      break if 'BACK'.match?(input)
+
+      shop(input)
+      next
+    end
+  end
+
+  # Order input pattern
+  PATTERN = /^\s*\d+\s*(watermelons||pineapples||rockmelons)$/
 
   # Order items
   def shop(input)
