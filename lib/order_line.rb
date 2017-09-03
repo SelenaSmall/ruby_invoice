@@ -23,22 +23,20 @@ class OrderLine
     total_packs[0]
   end
 
-  def present_line(whole_packs)
+  def present_line(packs)
     sub_total = []
     sub_item = []
-    whole_packs.each do |k, v, i|
-      sub_item << "#{k}x #{v} packs @ #{i} "
+    packs.each do |k, v, i|
       sub_total << k * i
+      sub_item << "#{k}x #{v} packs @ #{i}"
     end
 
     @line_total = sub_total.inject(0) { |sum, x| sum + x }
 
-    puts "#{@order_qty} #{@order_item.name} #{@line_total}"
-
-    sub_item.each { |s| puts s }
+    sub_item.each { |s| s }
   end
 
-  def total_quantity_of_items
+  def presenter_line_total
     @line_total
   end
 

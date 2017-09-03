@@ -1,15 +1,17 @@
 require_relative 'item'
+require_relative 'invoice'
 require_relative 'order_line'
 
 # HandleInput class
 class HandleInput
-  attr_reader :order
+  attr_reader :order, :invoice
 
   # Actions
   ACTIONS = %w[LIST SHOP VIEW].freeze
 
   def initialize(order)
     @order = order
+    @invoice = Invoice.new
   end
 
   # Interpret method
@@ -41,8 +43,8 @@ class HandleInput
       end
     end
 
-    # show invoice total
-    puts order.find_order_total if command == 'VIEW'
+    # View Invoice
+    return invoice.print_order(order) if command == 'VIEW'
   end
 
   PATTERN = /^\s*\d+\s*(watermelon||pineapple||rockmelon)$/

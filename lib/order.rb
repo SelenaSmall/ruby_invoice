@@ -13,7 +13,7 @@ class Order
   def find_order_total
     total = 0
     @items.each do |item|
-      total += item[0].total_quantity_of_items
+      total += item[0].presenter_line_total
     end
 
     total
