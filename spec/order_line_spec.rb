@@ -25,16 +25,10 @@ describe OrderLine do
   end
 
   describe '#optimal' do
-    it 'should return total_packs[0] which is an Array' do
+    it 'should return optimum combination of packs which is an Enumerator' do
       instance = OrderLine.new(12, Item.new('watermelons'))
 
-      expect(instance.optimal(instance.order_item.name)).to be_a Array
-    end
-
-    it 'should return whole_packs[0] which is an Array' do
-      instance = OrderLine.new(10, Item.new('watermelons'))
-
-      expect(instance.optimal(instance.order_item.name)).to be_a Array
+      expect(instance.optimal(instance.order_item.name)).to be_a Enumerator
     end
   end
 
@@ -52,24 +46,6 @@ describe OrderLine do
       instance.present_line(instance.optimal(instance.order_item.name))
 
       expect(instance.presenter_line_total).to be_a Money
-    end
-  end
-
-  describe '#whole_packs' do
-    it 'should return an Array' do
-      instance = OrderLine.new(12, Item.new('watermelons'))
-      pack_qtys = [[3, 6.99], [5, 8.99]]
-
-      expect(instance.send(:whole_packs, pack_qtys, [], @order_qty)).to be_a Array
-    end
-  end
-
-  describe '#left_over_items' do
-    it 'should return an Array' do
-      instance = OrderLine.new(12, Item.new('watermelons'))
-      pack_qtys = [[3, 6.99], [5, 8.99]]
-
-      expect(instance.send(:left_over_items, pack_qtys, [], 1)).to be_a Array
     end
   end
 end
