@@ -41,43 +41,4 @@ describe HandleInput do
       expect(instance.interpret('SHOP')).to be_nil
     end
   end
-
-  describe '#shop_menu' do
-    before do
-      $stdin = StringIO.new('3 watermelons')
-      $stdin = StringIO.new('BACK')
-    end
-
-    it 'should return nil' do
-      instance = HandleInput.new(Order.new)
-
-      expect(instance.send(:shop_menu)).to be_nil
-    end
-  end
-
-  describe '#shop' do
-    before do
-      $stdin = StringIO.new('3 watermelons')
-    end
-
-    it 'should return an instance of OrderLine' do
-      instance = HandleInput.new(Order.new)
-
-      expect(instance.send(:shop, '10 watermelons')).to be_a OrderLine
-    end
-
-    it 'should return nil if input does not match PATTERN' do
-      instance = HandleInput.new(Order.new)
-
-      expect(instance.send(:shop, 'fruit')).to be_nil
-    end
-  end
-
-  describe '#exec' do
-    it 'should return an instance of OrderLine' do
-      instance = HandleInput.new(Order.new)
-
-      expect(instance.send(:exec, OrderLine.new(10, Item.new('watermelons')))).to be_a OrderLine
-    end
-  end
 end

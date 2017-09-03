@@ -1,11 +1,5 @@
 # Invoice class
 class Invoice
-  attr_reader :printorder
-
-  def initialize
-    @printorder = []
-  end
-
   def print_order(order)
     puts "Customer Invoice \n"
     puts "Items rounded up to nearest available qty\n"
