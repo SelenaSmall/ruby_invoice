@@ -1,5 +1,4 @@
 require_relative 'item'
-# require_relative 'order'
 require_relative 'order_line'
 
 # HandleInput class
@@ -7,7 +6,7 @@ class HandleInput
   attr_reader :order
 
   # Actions
-  ACTIONS = %w[LIST SHOP VIEW EXIT].freeze
+  ACTIONS = %w[LIST SHOP VIEW].freeze
 
   def initialize(order)
     @order = order
@@ -18,8 +17,6 @@ class HandleInput
   # @return
   def interpret(command)
     return unless ACTIONS.detect { |a| a == command }
-
-    $stdout.print "#{command} \n"
 
     if command == 'LIST'
       # list all availble items and package sizes
@@ -44,41 +41,33 @@ class HandleInput
       end
     end
 
-    # loop { shop if command == 'SHOP' }
-
-    if command == 'VIEW'
-      # show invoice
-    end
-
-    if command == 'EXIT'
-      # exit
-    end
+    # show invoice total
+    puts order.find_order_total if command == 'VIEW'
   end
 
-  def shop(input)
-    # TODO: OR if it doesn't match a specific order pattern
+  PATTERN = /^\s*\d+\s*(watermelon||pineapple||rockmelon)$/
 
-    # break it down into qty, item
+  # Order items
+  def shop(input)
+    unless input.match?(PATTERN)
+      puts "That's not a valid input"
+      return
+    end
+
+    # Break input down into qty, item
     line = input.split(/\W+/)
 
-    # TODO: Ensure the order_item is valid
+    exec(OrderLine.new(line[0].to_i, Item.new(line[1])))
+  end
 
-    # Create a order_line containing the new item
-    order_line = OrderLine.new(line[0].to_i, Item.new(line[1]))
-
-    # Find optimal qty of packs
-    product = order_line.optimal(order_line.order_item.name)
-
-    # Present order_line for invoice
-    order_line.present_line(product)
-
-    # order = Order.new
-
-    add_to_order = @order.add_item(order_line)
-
-    # puts add_to_order
-
-    puts order.find_order_total
+  # Add item order_line to order
+  def exec(order_line)
+    order.add_item(
+      order_line,
+      order_line.present_line(
+        order_line.optimal(order_line.order_item.name)
+      )
+    )
 
     order_line
   end

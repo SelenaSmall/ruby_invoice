@@ -11,56 +11,16 @@ class OrderLine
   end
 
   def optimal(product)
-    pack = @order_item.packs(product)
-    # pack = @order_item.watermelon if product == 'watermelon'
-
     pack_qtys = []
-    pack.each do |p|
-      pack_qtys << [p.qty, p.price]
-    end
+    @order_item.packs(product).each { |p| pack_qtys << [p.qty, p.price] }
 
-    # sort packs in descending order
-    p_desc = pack_qtys.sort { |a, b| b <=> a }
+    whole_packs = whole_packs(pack_qtys, [], order_qty)
 
-    whole_packs = []
-    left_over_qty = order_qty
+    return whole_packs[0] if whole_packs[1].zero?
 
-    # Find the # of largest size packs required to make up the qty
-    # If it's not exact, top it up with next largest packs, etc etc
-    p_desc.each do |p, v|
-      volume = left_over_qty.to_f / p
+    total_packs = left_over_items(pack_qtys, whole_packs[0], whole_packs[1])
 
-      next unless volume >= 1
-
-      product = volume.to_int * p
-      left_over_qty -= product
-
-      whole_packs << [volume.to_int, p, v]
-    end
-    # puts whole_packs.each
-
-    # sort pack in ascending order
-    p_asc = pack_qtys.sort { |a, b| a <=> b }
-
-    p_asc.each do |p, v|
-      break if left_over_qty.zero?
-
-      if left_over_qty <= p
-        # Update qty of packs if entry already exists
-        whole_packs.map do |a|
-          a[0] += 1 if a[1].to_i == p
-          left_over_qty = 0
-        end
-
-        next if whole_packs.detect { |a| a[1] == p }
-        # Otherwise, add a new entry to make up the qty
-        whole_packs << [1, p, v]
-      end
-
-      next
-    end
-
-    whole_packs
+    total_packs[0]
   end
 
   def present_line(whole_packs)
@@ -75,13 +35,43 @@ class OrderLine
 
     puts "#{@order_qty} #{@order_item.name} #{@line_total}"
 
-    sub_item.each do |s|
-      puts s
-    end
+    sub_item.each { |s| puts s }
   end
 
   def total_quantity_of_items
-    # @order_qty * @line_total
     @line_total
+  end
+
+  private
+
+  def whole_packs(pack_qtys, packs, left_over_qty)
+    pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
+      volume = left_over_qty.to_f / p
+
+      next unless volume >= 1
+
+      left_over_qty -= volume.to_int * p
+
+      packs << [volume.to_int, p, v]
+    end
+
+    [packs, left_over_qty]
+  end
+
+  def left_over_items(pack_qtys, packs, left_over_qty)
+    pack_qtys.sort { |a, b| a <=> b }.each do |p, v|
+      break if left_over_qty.zero?
+
+      next unless left_over_qty <= p
+
+      packs.map { |a| a[0] += 1 if a[1].to_i == p }
+      left_over_qty = 0
+
+      next if packs.detect { |a| a[1] == p }
+
+      packs << [1, p, v]
+    end
+
+    [packs, left_over_qty]
   end
 end
