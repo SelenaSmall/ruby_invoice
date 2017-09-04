@@ -94,6 +94,7 @@ class OrderLine
     pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
       next unless (order_qty / p) * p == order_qty
       matches << [order_qty / p, p, v]
+      break
     end
 
     matches
