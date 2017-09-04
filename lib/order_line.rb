@@ -10,112 +10,55 @@ class OrderLine
     @order_packs = nil
   end
 
+  # Optimal method
+  # @param product [String]
+  # @return Enumerator
   def optimal(product)
-    puts "Quantity: #{order_qty}"
     pack_qtys = []
     @order_item.packs(product).each { |p| pack_qtys << [p.qty, p.price] }
-    puts "Packs: #{pack_qtys}"
 
-    # Get Exact matches
-    exact_matches = []
-    pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
-      next unless (order_qty / p) * p == order_qty
-      exact_matches << [order_qty / p, p, v]
-    end
-    # puts exact_matches
+    # Retrive matches for same size packs
+    same_packs = price_check(same_match(pack_qtys, []), [])
 
-    # Check for the optimim price
-    price_check = []
-    exact_matches.each do |x, y, z|
-      val = (x * z)
+    # Retrive matches for different size packs
+    diff_packs = price_check(diff_match(pack_qtys, [], []), [])
 
-      price_check << [x, y, z, val]
-    end
-    # puts price_check
-
-    numbers = price_check.select { |x| x[3] }.map
-
-    # Get Part matches
-    partial_matches = []
-    pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
-      partial_matches << [order_qty / p, p, v]
-    end
-    puts "partial: #{partial_matches}"
-
-    # Top up part matches
-    exact_partial = []
-    partial_matches.each do |x, y, z|
-      val = order_qty - (x * y)
-      puts "VAL: #{val}"
-      pack_qtys.detect do |a|
-        # To be optimised: a.include?(val) does not cooperate with Money
-        if a[0] == val || a[0] * 3 == val
-          exact_partial << [x, y, z]
-          exact_partial << [val / a[0], a[0], a[1]]
-        end
-      end
-    end
-    puts "exact partial: #{exact_partial}"
-
-    # Check for the optimim partial price
-    partial_price_check = []
-    exact_partial.each do |x, y, z|
-      val = (x * z)
-
-      partial_price_check << [x, y, z, val]
-    end
-    # puts partial_price_check
-
-    partial_numbers = partial_price_check.select { |x| x[3] }.map
-
-    partial_price_array = []
-    partial_numbers.each do |f|
-      partial_price_array << f
-    end
-    # puts partial_price_array
-
-    puts "Exact Match: #{exact_matches}"
-    # Array for best price line: 1x 9pk @16 = $16
-    puts "Best Exact Price: #{numbers.min}"
-    puts "Partial Match: #{exact_partial}"
-    puts "Best Partial Price: #{partial_price_array}"
-
-    return calculate_best(numbers, partial_price_array) unless price_check.empty?
-
-    calculate_best(numbers.min, partial_price_array)
+    calculate_best(same_packs, diff_packs)
   end
 
   def calculate_best(exact, partial)
-    if exact.nil?
-      puts "\nThis is it #{partial}"
+    # If there are no matches on same_packs, return diff_packs
+    unless exact.any?
+      puts "\nThis is it #{partial.inspect}"
       return partial
     end
 
-    if partial.empty?
-      puts "\nThis is it #{exact}"
+    # If there are no matches on diff_packs, return same_packs
+    unless partial.any?
+      puts "\nThis is it #{exact.inspect}"
       return exact
     end
 
+    # If there's one of each, work out which is the better price
     sub_total = []
     partial.each do |_x, _y, _z, val|
       sub_total << val
     end
 
-    # Find total cost of sub_items
+    # # Find total cost of sub_items for a partial match
     line_total = sub_total.inject(:+)
 
-    # Return array of the cheapest line
+    # Return the cheapest option
     if [exact.min[3], line_total].min == line_total
-      puts "\nThis is it #{partial}"
+      puts "\nThis is it #{partial.inspect}"
       return partial
     end
 
-    puts "\nThis is it #{exact}" if [exact.min[3], line_total].min == exact
     exact
   end
 
   def present_line(packs)
-    puts "pACKS: #{packs}"
+    puts "PACKS: #{packs}"
     sub_total = []
     sub_item = []
     packs.each do |k, v, i|
@@ -130,5 +73,60 @@ class OrderLine
 
   def presenter_line_total
     @line_total
+  end
+
+  private
+
+  # Price check method
+  # @param exact_matches [Array]
+  # @param prices [Array]
+  # @return prices [Enumerator]
+  def price_check(matches, prices)
+    matches.each do |x, y, z|
+      val = (x * z)
+
+      prices << [x, y, z, val]
+    end
+
+    prices.select { |x| x[3] }.map
+  end
+
+  # Exact match method
+  # @param pack_qtys [Array]
+  # @param matches [Array]
+  # @param order_qty [Integer]
+  # @return matches
+  def same_match(pack_qtys, matches)
+    pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
+      next unless (order_qty / p) * p == order_qty
+      matches << [order_qty / p, p, v]
+    end
+
+    matches
+  end
+
+  # Exact partial method
+  # @param pack_qtys [Array]
+  # @param matches [Array]
+  # @param part_order [Array]
+  # @param order_qty [Integer]
+  # @return part_order
+  def diff_match(pack_qtys, matches, part_order)
+    pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
+      matches << [order_qty / p, p, v]
+    end
+
+    matches.each do |x, y, z|
+      val = order_qty - (x * y)
+      pack_qtys.detect do |a|
+        # TODO: This can be optimised. a.include?(val) does not cooperate with Money
+        if a[0] == val || a[0] == val || a[0] * 3 == val
+          part_order << [x, y, z]
+          part_order << [val / a[0], a[0], a[1]]
+        end
+      end
+    end
+
+    part_order
   end
 end

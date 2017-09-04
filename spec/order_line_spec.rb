@@ -48,4 +48,41 @@ describe OrderLine do
       expect(instance.presenter_line_total).to be_a Money
     end
   end
+
+  describe '#price_check' do
+    it 'should return total prices for each match which is an Enumerator' do
+      order_item = Item.new('watermelons')
+      instance = OrderLine.new(10, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+      match = instance.send(:same_match, pack_qtys, [])
+
+      expect(instance.send(:price_check, match, [])).to be_a Enumerator
+    end
+  end
+
+  describe '#same_match' do
+    it 'should return all same pack combinations which can make up the total, which is an Array' do
+      order_item = Item.new('watermelons')
+      instance = OrderLine.new(12, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+
+      expect(instance.send(:same_match, pack_qtys, [])).to be_a Array
+    end
+  end
+
+  describe '#diff_match' do
+    it 'should return all different pack combinations which can make up the total, which is an Array' do
+      order_item = Item.new('watermelons')
+      instance = OrderLine.new(12, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+
+      expect(instance.send(:diff_match, pack_qtys, [], [])).to be_a Array
+    end
+  end
 end
