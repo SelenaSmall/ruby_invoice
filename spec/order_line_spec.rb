@@ -45,9 +45,7 @@ describe OrderLine do
 
       expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
     end
-  end
 
-  describe '#calculate_best' do
     it 'should return optimum combination of packs which is an Enumerator' do
       order_item = Item.new('watermelons')
       instance = OrderLine.new(10, order_item)
@@ -60,9 +58,7 @@ describe OrderLine do
 
       expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
     end
-  end
 
-  describe '#calculate_best' do
     it 'should return optimum combination of packs which is an Enumerator' do
       order_item = Item.new('pineapples')
       instance = OrderLine.new(14, order_item)
@@ -75,9 +71,7 @@ describe OrderLine do
 
       expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
     end
-  end
 
-  describe '#calculate_best' do
     it 'should return an Enumerator which is empty if the quantity cannot be made up of packs' do
       order_item = Item.new('pineapples')
       instance = OrderLine.new(1, order_item)
@@ -93,8 +87,14 @@ describe OrderLine do
   end
 
   describe '#present_line' do
-    it 'should return whole_packs which is an Array' do
-      instance = OrderLine.new(12, Item.new('watermelons'))
+    it 'should return subitems which is an Array' do
+      instance = OrderLine.new(10, Item.new('watermelons'))
+
+      expect(instance.present_line(instance.optimal(instance.order_item.name))).to be_a Array
+    end
+
+    it 'should return subitems which is an Array' do
+      instance = OrderLine.new(14, Item.new('pineapples'))
 
       expect(instance.present_line(instance.optimal(instance.order_item.name))).to be_a Array
     end

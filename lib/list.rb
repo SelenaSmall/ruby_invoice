@@ -1,24 +1,28 @@
 # List class
 class List
+  attr_reader :watermelons, :pineapples, :rockmelons
+
+  def initialize
+    @watermelons = Item.new('watermelons').packs('watermelons')
+    @pineapples = Item.new('pineapples').packs('pineapples')
+    @rockmelons = Item.new('rockmelons').packs('rockmelons')
+  end
+
+  # Selection method
+  # @param watermelons [Array]
+  # @param pineapples [Array]
+  # @param rockmelons [Array]
+  # @return nil
   def selection
-    puts "Products Available \n"
+    puts "\nWatermelons"
+    watermelons.each { |i| puts "#{i.qty} pack @ #{i.price}" }
 
-    puts 'Watermelons'
-    Item.new('watermelons').packs('watermelons').each do |i|
-      puts "#{i.qty} pack @ #{i.price}"
-    end
-    puts "---------------\n"
+    puts "\nPineapples"
+    pineapples.each { |i| puts "#{i.qty} pack @ #{i.price}" }
 
-    puts 'Pineapples'
-    Item.new('pineapples').packs('pineapples').each do |i|
-      puts "#{i.qty} pack @ #{i.price}"
-    end
-    puts "---------------\n"
+    puts "\nRockmelons"
+    rockmelons.each { |i| puts "#{i.qty} pack @ #{i.price}" }
 
-    puts 'Rockmelons'
-    Item.new('rockmelons').packs('rockmelons').each do |i|
-      puts "#{i.qty} pack @ #{i.price}"
-    end
-    puts "---------------\n"
+    puts "\n"
   end
 end

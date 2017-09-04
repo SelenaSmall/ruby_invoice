@@ -20,7 +20,7 @@ class HandleInput
 
   # Interpret method
   # @param command [String]
-  # @return
+  # @return nil
   def interpret(command)
     return unless ACTIONS.detect { |a| a == command }
 
@@ -28,6 +28,6 @@ class HandleInput
 
     return shop.menu if command.match?('SHOP')
 
-    return invoice.print_order(order) if command.match?('VIEW')
+    invoice.print_order(order)
   end
 end

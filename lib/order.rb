@@ -6,10 +6,17 @@ class Order
     @items = []
   end
 
+  # Add item method
+  # @param order_item [String]
+  # @param breakdown [Array]
+  # @return items [Array]
   def add_item(order_item, breakdown)
     @items.push([order_item, breakdown])
   end
 
+  # Find order method
+  # @param items [Array]
+  # @return total [Money]
   def find_order_total
     total = 0
     @items.each do |item|

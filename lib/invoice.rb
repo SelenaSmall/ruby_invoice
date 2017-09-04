@@ -1,8 +1,10 @@
 # Invoice class
 class Invoice
+  # Print order method
+  # @param order [Order]
+  # @return nil
   def print_order(order)
-    puts "Customer Invoice \n"
-    puts "Items rounded up to nearest available qty\n"
+    puts "CUSTOMER INVOICE \n"
     puts "qty\titem\t\t\tsub"
     puts '-------------------------------------'
     order.items.each do |item|

@@ -47,6 +47,9 @@ class OrderLine
     same_packs
   end
 
+  # Present line method
+  # @param packs [Array]
+  # @return Array
   def present_line(packs)
     sub_total = []
     sub_item = []
@@ -60,6 +63,8 @@ class OrderLine
     sub_item.each { |s| s }
   end
 
+  # Presenter line total method
+  # @return line_total
   def presenter_line_total
     @line_total
   end
@@ -108,8 +113,7 @@ class OrderLine
     matches.each do |x, y, z|
       val = order_qty - (x * y)
       pack_qtys.detect do |a|
-        # TODO: Optimised. a.include?(val) does not cooperate with Money
-        if a[0] == val || a[0] == val || a[0] * 3 == val
+        if a[0] == val || a[0] * 3 == val
           part_order << [x, y, z]
           part_order << [val / a[0], a[0], a[1]]
         end

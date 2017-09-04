@@ -15,6 +15,18 @@ describe HandleInput do
 
       expect(instance.invoice).to be_a Invoice
     end
+
+    it 'should have a list attribute which is an instance of List' do
+      instance = HandleInput.new(Order.new)
+
+      expect(instance.list).to be_a List
+    end
+
+    it 'should have a shop attribute which is an instance of Shop' do
+      instance = HandleInput.new(Order.new)
+
+      expect(instance.shop).to be_a Shop
+    end
   end
 
   describe '#interpret' do

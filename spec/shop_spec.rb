@@ -25,10 +25,6 @@ describe Shop do
   end
 
   describe '#choose_items' do
-    before do
-      $stdin = StringIO.new('3 watermelons')
-    end
-
     it 'should return an instance of OrderLine' do
       instance = Shop.new(Order.new)
 

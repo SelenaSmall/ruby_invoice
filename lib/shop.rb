@@ -8,6 +8,8 @@ class Shop
     @order = order
   end
 
+  # Menu method
+  # @return nil
   def menu
     $stdout.print "Type BACK at any time to return to the main menu. \nAdd qty and items to backet, example input: 3 watermelons \n"
 
@@ -23,18 +25,25 @@ class Shop
     end
   end
 
+  # Choose items method
+  # @param input [String]
+  # @return order_line
   def choose_items(input)
     unless input.match?(PATTERN)
       puts "That's not a valid input"
       return
     end
 
-    # Break input down into qty, item
     line = input.split(/\W+/)
 
     exec(OrderLine.new(line[0].to_i, Item.new(line[1])))
   end
 
+  private
+
+  # Exec method
+  # @param order_line [OrderLine]
+  # @return order_line
   def exec(order_line)
     optimal = order_line.optimal(order_line.order_item.name)
 

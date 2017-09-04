@@ -19,15 +19,7 @@ describe Item do
   end
 
   describe '#packs' do
-    it 'should return an Array of Packs' do
-      instance = Item.new('watermelons')
-
-      expect(instance.packs('watermelons')).to be_a Array
-    end
-  end
-
-  describe '#packs' do
-    it 'should nil unless fruit is valid' do
+    it 'should return nil unless fruit is valid' do
       instance = Item.new('watermelons')
 
       expect(instance.packs('hello')).to be_nil
@@ -38,22 +30,28 @@ describe Item do
 
       expect(instance.packs('watermelons')).to be_a Array
     end
+
+    it 'should return packs available for the fruit which is an Array' do
+      instance = Item.new('pineapples')
+
+      expect(instance.packs('pineapples')).to be_a Array
+    end
   end
 
   describe '#watermelons' do
-    it 'should an Array' do
+    it 'should return an Array' do
       instance = Item.new('watermelons')
 
       expect(instance.send(:watermelons)).to be_a Array
     end
 
-    it 'should an Array' do
+    it 'should return an Array' do
       instance = Item.new('pineapples')
 
       expect(instance.send(:pineapples)).to be_a Array
     end
 
-    it 'should an Array' do
+    it 'should return an Array' do
       instance = Item.new('rockmelons')
 
       expect(instance.send(:rockmelons)).to be_a Array
