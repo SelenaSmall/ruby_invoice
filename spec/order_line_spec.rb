@@ -32,6 +32,66 @@ describe OrderLine do
     end
   end
 
+  describe '#calculate_best' do
+    it 'should return optimum combination of packs which is an Enumerator' do
+      order_item = Item.new('rockmelons')
+      instance = OrderLine.new(13, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+
+      same_packs = instance.send(:price_check, instance.send(:same_match, pack_qtys, []), [])
+      diff_packs = instance.send(:price_check, instance.send(:diff_match, pack_qtys, [], []), [])
+
+      expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
+    end
+  end
+
+  describe '#calculate_best' do
+    it 'should return optimum combination of packs which is an Enumerator' do
+      order_item = Item.new('watermelons')
+      instance = OrderLine.new(10, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+
+      same_packs = instance.send(:price_check, instance.send(:same_match, pack_qtys, []), [])
+      diff_packs = instance.send(:price_check, instance.send(:diff_match, pack_qtys, [], []), [])
+
+      expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
+    end
+  end
+
+  describe '#calculate_best' do
+    it 'should return optimum combination of packs which is an Enumerator' do
+      order_item = Item.new('pineapples')
+      instance = OrderLine.new(14, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+
+      same_packs = instance.send(:price_check, instance.send(:same_match, pack_qtys, []), [])
+      diff_packs = instance.send(:price_check, instance.send(:diff_match, pack_qtys, [], []), [])
+
+      expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
+    end
+  end
+
+  describe '#calculate_best' do
+    it 'should return an Enumerator which is empty if the quantity cannot be made up of packs' do
+      order_item = Item.new('pineapples')
+      instance = OrderLine.new(1, order_item)
+
+      pack_qtys = []
+      order_item.packs(instance.order_item.name).each { |p| pack_qtys << [p.qty, p.price] }
+
+      same_packs = instance.send(:price_check, instance.send(:same_match, pack_qtys, []), [])
+      diff_packs = instance.send(:price_check, instance.send(:diff_match, pack_qtys, [], []), [])
+
+      expect(instance.calculate_best(same_packs, diff_packs)).to be_a Enumerator
+    end
+  end
+
   describe '#present_line' do
     it 'should return whole_packs which is an Array' do
       instance = OrderLine.new(12, Item.new('watermelons'))

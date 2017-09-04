@@ -48,5 +48,11 @@ describe Shop do
 
       expect(instance.send(:exec, OrderLine.new(10, Item.new('watermelons')))).to be_a OrderLine
     end
+
+    it 'should return nil if an optimal order cannot be made up of packs' do
+      instance = Shop.new(Order.new)
+
+      expect(instance.send(:exec, OrderLine.new(1, Item.new('watermelons')))).to be_nil
+    end
   end
 end

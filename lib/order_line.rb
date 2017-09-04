@@ -26,39 +26,28 @@ class OrderLine
     calculate_best(same_packs, diff_packs)
   end
 
-  def calculate_best(exact, partial)
-    # If there are no matches on same_packs, return diff_packs
-    unless exact.any?
-      puts "\nThis is it #{partial.inspect}"
-      return partial
-    end
+  # Calculate best method
+  # @param same_packs [Enumerator]
+  # @param diff_packs [Enumerator]
+  # @return optimum combo of packs [Enumerator]
+  def calculate_best(same_packs, diff_packs)
+    return diff_packs unless same_packs.any?
 
-    # If there are no matches on diff_packs, return same_packs
-    unless partial.any?
-      puts "\nThis is it #{exact.inspect}"
-      return exact
-    end
+    return same_packs unless diff_packs.any?
 
-    # If there's one of each, work out which is the better price
+    # Get the total price of diff_packs
     sub_total = []
-    partial.each do |_x, _y, _z, val|
-      sub_total << val
-    end
+    diff_packs.each { |_x, _y, _z, val| sub_total << val }
 
-    # # Find total cost of sub_items for a partial match
     line_total = sub_total.inject(:+)
 
     # Return the cheapest option
-    if [exact.min[3], line_total].min == line_total
-      puts "\nThis is it #{partial.inspect}"
-      return partial
-    end
+    return diff_packs if [same_packs.min[3], line_total].min == line_total
 
-    exact
+    same_packs
   end
 
   def present_line(packs)
-    puts "PACKS: #{packs}"
     sub_total = []
     sub_item = []
     packs.each do |k, v, i|
@@ -119,7 +108,7 @@ class OrderLine
     matches.each do |x, y, z|
       val = order_qty - (x * y)
       pack_qtys.detect do |a|
-        # TODO: This can be optimised. a.include?(val) does not cooperate with Money
+        # TODO: Optimised. a.include?(val) does not cooperate with Money
         if a[0] == val || a[0] == val || a[0] * 3 == val
           part_order << [x, y, z]
           part_order << [val / a[0], a[0], a[1]]

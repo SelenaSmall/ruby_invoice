@@ -36,12 +36,12 @@ class Shop
   end
 
   def exec(order_line)
-    order.add_item(
-      order_line,
-      order_line.present_line(
-        order_line.optimal(order_line.order_item.name)
-      )
-    )
+    optimal = order_line.optimal(order_line.order_item.name)
+
+    return unless optimal.any?
+
+    order.add_item(order_line,
+                   order_line.present_line(optimal))
 
     order_line
   end
