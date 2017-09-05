@@ -108,17 +108,21 @@ class OrderLine
   # @return part_order
   def diff_match(pack_qtys, matches, part_order)
     pack_qtys.sort { |a, b| b <=> a }.each do |p, v|
+      next if (order_qty / p) * p == order_qty
       matches << [order_qty / p, p, v]
     end
 
     matches.each do |x, y, z|
       val = order_qty - (x * y)
+
       pack_qtys.detect do |a|
-        if a[0] == val || a[0] * 3 == val
+        if a[0] == val || a[0] * 2 == val || a[0] * 3 == val
           part_order << [x, y, z]
           part_order << [val / a[0], a[0], a[1]]
         end
       end
+
+      break unless part_order.empty?
     end
 
     part_order
