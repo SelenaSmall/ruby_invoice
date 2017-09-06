@@ -20,6 +20,7 @@ describe Order do
       breakdown = order_line.present_line(order_line.optimal(order_line.order_item.name))
 
       expect(instance.add_item(order_line, breakdown)).to be_a Array
+      expect(instance.add_item(order_line, breakdown)).to all(include(OrderLine))
     end
   end
 
@@ -39,6 +40,8 @@ describe Order do
       instance.add_item(order_line, breakdown)
 
       expect(instance.find_order_total).to be_a Money
+      expect(instance.find_order_total.fractional).to eq 1798
+      expect(instance.find_order_total.currency).to eq 'nzd'
     end
   end
 end

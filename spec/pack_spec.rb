@@ -15,6 +15,8 @@ describe Pack do
       instance = Pack.new(3, Money.new(699, 'NZD'))
 
       expect(instance.price).to be_a Money
+      expect(instance.price.fractional).to eq 699
+      expect(instance.price.currency).to eq 'nzd'
     end
   end
 end

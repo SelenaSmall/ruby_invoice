@@ -8,6 +8,14 @@ describe HandleInput do
       instance = HandleInput.new(Order.new)
 
       expect(instance.order).to be_a Order
+      expect(instance.order).to have_attributes(items: [])
+    end
+
+    it 'should have an order.items attribute which is an empty Array' do
+      instance = HandleInput.new(Order.new)
+
+      expect(instance.order.items).to be_a Array
+      expect(instance.order.items).to be_empty
     end
 
     it 'should have an invoice attribute which is an instance of Invoice' do
@@ -26,6 +34,7 @@ describe HandleInput do
       instance = HandleInput.new(Order.new)
 
       expect(instance.shop).to be_a Shop
+      expect(instance.shop).to have_attributes(order: Order)
     end
   end
 

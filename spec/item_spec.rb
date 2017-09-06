@@ -29,12 +29,14 @@ describe Item do
       instance = Item.new('watermelons')
 
       expect(instance.packs('watermelons')).to be_a Array
+      expect(instance.packs('watermelons')).to all(be_an(Pack))
     end
 
     it 'should return packs available for the fruit which is an Array' do
       instance = Item.new('pineapples')
 
       expect(instance.packs('pineapples')).to be_a Array
+      expect(instance.packs('pineapples')).to all(be_an(Pack))
     end
   end
 
@@ -43,18 +45,21 @@ describe Item do
       instance = Item.new('watermelons')
 
       expect(instance.send(:watermelons)).to be_a Array
+      expect(instance.send(:watermelons)).to all(be_an(Pack))
     end
 
     it 'should return an Array' do
       instance = Item.new('pineapples')
 
       expect(instance.send(:pineapples)).to be_a Array
+      expect(instance.send(:pineapples)).to all(be_an(Pack))
     end
 
     it 'should return an Array' do
       instance = Item.new('rockmelons')
 
       expect(instance.send(:rockmelons)).to be_a Array
+      expect(instance.send(:rockmelons)).to all(be_an(Pack))
     end
   end
 end
